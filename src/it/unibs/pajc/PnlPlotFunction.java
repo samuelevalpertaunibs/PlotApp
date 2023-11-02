@@ -5,6 +5,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Path2D;
 import java.util.function.DoubleConsumer;
 import java.util.function.DoubleUnaryOperator;
+import java.util.function.Function;
 
 import javax.swing.JPanel;
 
@@ -43,13 +44,16 @@ public class PnlPlotFunction extends JPanel {
 
         drawFunction(g2, -10, 10, 0.05, Math::sin);
 
+        g2.setColor(Color.red);
+        drawFunction(g2, -10, 10, 0.05, x -> Math.sin(2 * x) + Math.cos(x));
+
     }
 
-    protected void drawFunction(Graphics2D g2, double xmin, double xmax, double dx, DoubleUnaryOperator function){
+    protected void drawFunction(Graphics2D g2, double xmin, double xmax, double dx, Function<Double, Double> function){
         Path2D path = new Path2D.Double();
-        path.moveTo(xmin+dx, function.applyAsDouble(xmin+dx));
+        path.moveTo(xmin+dx, function.apply(xmin+dx));
         for (double x = xmin + dx; x <= xmax; x+=dx) {
-            path.lineTo(x, function.applyAsDouble(x));
+            path.lineTo(x, function.apply(x));
         }
         g2.draw(path);
     }
